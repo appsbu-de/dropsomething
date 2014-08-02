@@ -1,11 +1,11 @@
 /* globals pixelwidth, pixelheight */
-BasicGame.MainMenu = function (game) {
+DropSomething.MainMenu = function (game) {
 	this.game = game;
 	this.music = null;
 	this.playButton = null;
 };
 
-BasicGame.MainMenu.prototype = {
+DropSomething.MainMenu.prototype = {
 	create: function () {
         //this.music = this.add.audio('titleMusic');
 		//this.music.play();

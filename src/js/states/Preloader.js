@@ -1,5 +1,5 @@
 /* globals pixelwidth, pixelheight */
-BasicGame.Preloader = function(game) {
+DropSomething.Preloader = function(game) {
 
     this.game = game;
     this.background = null;
@@ -9,7 +9,7 @@ BasicGame.Preloader = function(game) {
 
 };
 
-BasicGame.Preloader.prototype = {
+DropSomething.Preloader.prototype = {
 
     preload: function() {
         //       this.background = this.add.sprite(0, 0, 'preloaderBackground');
@@ -22,11 +22,11 @@ BasicGame.Preloader.prototype = {
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAAAQCAYAAADOFPsRAAABuklEQVRYR+2ZMVIDMQxFd2/CESgpOQLllikpKTkCJSUl5ZYcISUlR+AmMMqMwkeRbMlymM3gNJuZ3W979fxlKZmv7+++psRnWa4S6ml6vH2eUwP8c/FMAFshrOvnRFq6tnxIOwC2RO5H0w1gdBMw/AGwI0CvkxgWOjDiRH52ODAHj9S/HMgALTfJ+xrAmhOlZjgwB/EEILoDh5aBp3sWQMvJOPZIoTlwrFYBIhzPd48TrWeGA3MgTYAMjq6YFhlEzYF4JmrOGw6sg3vaPxxbPGujbw5grS/9eHkr9o2XriesCG652R1Ir++vh6sEubkUavWlfK56AJaKMI9eZh32Cq3Bo5dVekQvAbKWQBJEF0BMkzi5LHDOUcRoAHGeSABlkooAsGIQmV+O4Zkf3SfXr0HcXBshAcozNxJAPMc5GBF9CwBcf1ZvnZLoQhVg7Xg9ZyPfIwC4flmARQBqFfhf6K0Uzu9lAqyB01KS1TfWxrKqUAbYI4VlUihqMyk8mkFo3tLv08UzsBb0EsColneZXBBXkVoh4jlDSi+f0bcWUa0ALReqAFuCf6yOOv+ddOltQHb9yAI3o9UHfgNTe4UvlswUmgAAAABJRU5ErkJggg==';
         var localAtlasData = {
             "frames": [{
-                "filename": "ground",
+                "filename": "ground1",
                 "frame": {
                     "x": 0,
                     "y": 0,
-                    "w": 32,
+                    "w": 16,
                     "h": 16
                 },
                 "rotated": false,

@@ -1,11 +1,11 @@
 
-BasicGame = {};
+DropSomething = {};
 
-BasicGame.Boot = function (game) {
+DropSomething.Boot = function (game) {
     this.game = game;
 };
 
-BasicGame.Boot.prototype = {
+DropSomething.Boot.prototype = {
     preload: function () {
 
         //  Here we load the assets required for our preloader (in this case a background and a loading bar)
