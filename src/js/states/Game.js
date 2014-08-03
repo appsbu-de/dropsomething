@@ -9,8 +9,13 @@ DropSomething.Game.prototype = {
 	create: function () {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
+        // Some settings
+        this.levelVelocity = -25;
+        this.platformCounter = 0;
         this.game.stage.backgroundColor = '#E0F8D0';
-        this.ball = this.add.sprite(this.game.world.width / 2, 16, 'sprites', 'ball');
+        this.platformCounter = 0;
+
+        this.ball = this.add.sprite(this.game.world.width / 2, 32, 'sprites', 'ball');
 
         this.platform1 = this.game.add.group();
         this.platform2 = this.game.add.group();
@@ -21,7 +26,7 @@ DropSomething.Game.prototype = {
         this.game.physics.enable(this.platform1);
         this.game.physics.enable(this.platform2);
 
-        this.ball.body.bounce.set(1);
+        this.ball.body.bounce.set(0.5);
 
         this.ball.body.collideWorldBounds = false;
         this.ball.body.mass = 1;
@@ -29,6 +34,7 @@ DropSomething.Game.prototype = {
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
+        this.setInitialPlatforms();
         this.spawnPlatform();
     },
 
@@ -44,6 +50,8 @@ DropSomething.Game.prototype = {
 
         this.game.physics.arcade.collide(this.platform1, this.ball);
         this.game.physics.arcade.collide(this.platform2, this.ball);
+
+        this.levelVelocity = -25 - this.platformCounter;
 
         if (this.ball.y > 144 ) {
             this.ball.y = -16;
@@ -78,20 +86,34 @@ DropSomething.Game.prototype = {
         }
     },
 
-    spawnPlatform: function () {
-        var type = this.game.rnd.integerInRange(1, 2);
-        var platformLength = this.game.rnd.integerInRange(1, 4);
-        var initX = this.game.rnd.integerInRange(0, 160 - (16 * platformLength));
-        var initY = 160;
+    setInitialPlatforms: function() {
+        var i = 4;
+        var firstLength = 3;
 
-        while (platformLength--) {
-            var usePlatformTile1 = this['platform' + type].getFirstDead();
+        while(firstLength--) {
+            this.setPlatform('1', (this.game.world.width / 2) - 24, firstLength, 48);
+        }
+
+        while(i--) {
+            var platformLength = this.game.rnd.integerInRange(1, 4);
+            var initX = this.game.rnd.integerInRange(0, 160 - (16 * platformLength));
+
+            while (platformLength--) {
+                this.setPlatform('1', initX, platformLength, 96 + (48 * i));
+            }
+        }
+    },
+
+    setPlatform: function (type, initX, platformLength, initY) {
+        var usePlatformTile1 = this['platform' + type].getFirstDead();
+
+        if (usePlatformTile1 !== null) {
             usePlatformTile1.reset(initX + (16 * platformLength), initY);
 
             usePlatformTile1.outOfBoundsKill = true;
             usePlatformTile1.checkWorldBounds = true;
 
-            usePlatformTile1.body.velocity.y = -25;
+            usePlatformTile1.body.velocity.y = this.levelVelocity;
             usePlatformTile1.body.immovable = true;
 
             usePlatformTile1.body.checkCollision.up = true;
@@ -99,9 +121,23 @@ DropSomething.Game.prototype = {
             usePlatformTile1.body.checkCollision.left = true;
             usePlatformTile1.body.checkCollision.right = true;
         }
+    },
+
+    spawnPlatform: function () {
+        this.platformCounter++;
+
+        var type = this.game.rnd.integerInRange(1, 2);
+        var platformLength = this.game.rnd.integerInRange(1, 3);
+        var initX = this.game.rnd.integerInRange(0, 160 - (16 * platformLength));
+        var initY = 160;
+
+        while (platformLength--) {
+            this.setPlatform(type, initX, platformLength, initY);
+        }
 
         this.game.time.events.add(Phaser.Timer.SECOND * this.game.rnd.integerInRange(1,3), this.spawnPlatform, this);
     },
+
 
     render: function() {
         this.game.CS.settings.pixelcontext.drawImage(
