@@ -202,7 +202,7 @@ DropSomething.Preloader.prototype = {
         //	the update function completely.
 
         this.ready = true;
-        this.game.state.start('Game');
+        this.game.state.start('MainMenu');
 
         /*if (this.cache.isSoundDecoded('titleMusic') && this.ready === false)
 		{
