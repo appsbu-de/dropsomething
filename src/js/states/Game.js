@@ -1,7 +1,9 @@
 /* globals pixelwidth, pixelheight */
 DropSomething.Game = function (game) {
     this.game = game;
-    console.log(this.game.CS);
+    this.initialVelocity = this.levelVelocity = -25;
+    this.platformCounter = 0;
+    this.currentTimer = null;
 };
 
 DropSomething.Game.prototype = {
@@ -10,21 +12,21 @@ DropSomething.Game.prototype = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // Some settings
-        this.levelVelocity = -25;
-        this.platformCounter = 0;
         this.game.stage.backgroundColor = '#E0F8D0';
-        this.platformCounter = 0;
 
         this.ball = this.add.sprite(this.game.world.width / 2, 32, 'sprites', 'ball');
 
         this.platform1 = this.game.add.group();
         this.platform2 = this.game.add.group();
-        this.platform1.createMultiple(15, 'sprites', 'ground1');
-        this.platform2.createMultiple(15, 'sprites', 'ground2');
+        this.extra = this.game.add.group();
+        this.platform1.createMultiple(25, 'sprites', 'ground1');
+        this.platform2.createMultiple(25, 'sprites', 'ground2');
+        this.extra.createMultiple(5, 'sprites', 'extra1');
 
         this.game.physics.enable(this.ball);
         this.game.physics.enable(this.platform1);
         this.game.physics.enable(this.platform2);
+        this.game.physics.enable(this.extra);
 
         this.ball.body.bounce.set(0.5);
 
@@ -33,6 +35,11 @@ DropSomething.Game.prototype = {
         this.ball.body.gravity.y = 200;
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
+
+        this.scoreText = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
+        this.scoreText.text = "score " + this.platformCounter;
+
+        this.scoreValue = this.game.add.image(2, 4, this.scoreText);
 
         this.setInitialPlatforms();
         this.spawnPlatform();
@@ -48,15 +55,20 @@ DropSomething.Game.prototype = {
             this.ball.body.velocity.y = 100;
         }
 
-        this.game.physics.arcade.collide(this.platform1, this.ball);
-        this.game.physics.arcade.collide(this.platform2, this.ball);
-
-        this.levelVelocity = -25 - this.platformCounter;
-
         if (this.ball.y > 144 ) {
             this.ball.y = -16;
         }
 
+        this.game.physics.arcade.overlap(this.ball, this.extra, this.getExtraCallback, null, this);
+        this.game.physics.arcade.collide(this.platform1, this.ball);
+        this.game.physics.arcade.collide(this.platform2, this.ball);
+
+        this.levelVelocity = this.initialVelocity - this.platformCounter;
+        this.scoreText.text = "score " + this.platformCounter;
+    },
+
+    getExtraCallback: function(ball, extra) {
+        extra.kill();
     },
 
 	quitGame: function (pointer) {
@@ -124,18 +136,32 @@ DropSomething.Game.prototype = {
     },
 
     spawnPlatform: function () {
+
         this.platformCounter++;
 
         var type = this.game.rnd.integerInRange(1, 2);
         var platformLength = this.game.rnd.integerInRange(1, 3);
         var initX = this.game.rnd.integerInRange(0, 160 - (16 * platformLength));
         var initY = 160;
+        var initYExtra = 160 - 10;
+
+        if (this.platformCounter > 2) {
+            // span an extra!
+            console.log("extra!");
+            var extra = this.extra.getFirstDead();
+            if (extra !== null) {
+                extra.reset(initX +12, initYExtra);
+                extra.body.velocity.y = this.levelVelocity;
+                extra.outOfBoundsKill = true;
+                extra.checkWorldBounds = true;
+            }
+        }
 
         while (platformLength--) {
             this.setPlatform(type, initX, platformLength, initY);
         }
 
-        this.game.time.events.add(Phaser.Timer.SECOND * this.game.rnd.integerInRange(1,3), this.spawnPlatform, this);
+        this.platformTimer = this.game.time.events.add(Phaser.Timer.SECOND * this.game.rnd.integerInRange(1,3), this.spawnPlatform, this);
     },
 
 

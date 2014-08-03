@@ -180,7 +180,7 @@ DropSomething.Preloader.prototype = {
         this.game.load.atlas('sprites', spritesheet, null, localAtlasData, Phaser.Loader
             .TEXTURE_ATLAS_JSON_ARRAY);
 
-        this.game.load.spritesheet('font', font, 8, 8);
+        this.game.load.image('font', font);
 
         //this.load.audio('titleMusic', ['assets/audio/title.mp3']);
         //this.load.bitmapFont('caslon', 'assets/img/desyrel-pink.png', 'asstes/img/desyrel-pink.xml');
