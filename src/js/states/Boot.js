@@ -19,12 +19,12 @@ DropSomething.Boot.prototype = {
         this.game.CS.settings.pixelcontext = pixelCanvas.getContext("2d");
         this.game.CS.settings.pixelwidth = pixelCanvas.width;
         this.game.CS.settings.pixelheight = pixelCanvas.height;
+        this.game.CS.audio = {};
 
         Phaser.Canvas.setSmoothingEnabled(this.game.CS.settings.pixelcontext, false);
 
         this.game.input.maxPointers = 1;
         this.game.stage.disableVisibilityChange = true;
-
 
         this.game.state.start('Preloader');
     },

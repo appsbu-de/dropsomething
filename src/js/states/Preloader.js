@@ -1,4 +1,4 @@
-/* globals pixelwidth, pixelheight, CPlayer, song */
+/* globals pixelwidth, pixelheight, CPlayer, song, RIFFWAVE */
 DropSomething.Preloader = function(game) {
 
     this.game = game;
@@ -179,8 +179,22 @@ DropSomething.Preloader.prototype = {
         this.player = new CPlayer();
         this.player.init(song);
 
-        // Generate music...
-        var done = false;
+        var sine = [];
+        for (var i=0; i<1000; i++) {
+            sine[i] = 128+Math.round(127*Math.sin(i/5));
+        }
+
+        var sinWave = new RIFFWAVE(sine);
+
+        var noise = [];
+        for (i=0; i<1000; i++) {
+            noise[i] = Math.round(128*Math.random());
+        }
+
+        var noiseWave = new RIFFWAVE(noise);
+
+        this.game.CS.audio.touch = new Audio(sinWave.dataURI);
+        this.game.CS.audio.crash = new Audio(noiseWave.dataURI);
 
     },
 
@@ -195,7 +209,6 @@ DropSomething.Preloader.prototype = {
         if (this.ready === true && this.loaded === false) {
             this.loaded = true;
             var wave = this.player.createWave();
-            this.game.CS.audio = {};
             this.game.CS.audio.song = document.createElement("audio");
             this.game.CS.audio.song.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
             this.game.CS.audio.song.play();
