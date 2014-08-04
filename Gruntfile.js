@@ -89,6 +89,7 @@ module.exports = function (grunt) {
                 'Gruntfile.js',
                 '<%= project.js %>',
                 '!src/js/song.js',
+                '!src/js/riffwave.js',
                 '!src/js/player-small.js'
             ],
             options: {
