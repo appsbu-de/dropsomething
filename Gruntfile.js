@@ -87,7 +87,9 @@ module.exports = function (grunt) {
         jshint: {
             files: [
                 'Gruntfile.js',
-                '<%= project.js %>'
+                '<%= project.js %>',
+                '!src/js/song.js',
+                '!src/js/player-small.js'
             ],
             options: {
 
@@ -168,7 +170,6 @@ module.exports = function (grunt) {
         'copy:assets',
         'copy:phaser'
     ]);
-
 
     grunt.registerTask('copydebug', [
         'copy:debug',

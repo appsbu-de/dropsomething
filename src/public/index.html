@@ -8,6 +8,8 @@
 
 	<script src="phaser.js"></script>
     <!--(if target debug)><!-->
+    <script type="text/javascript" src="src/player-small.js"></script>
+    <script type="text/javascript" src="src/song.js"></script>
     <script type="text/javascript" src="src/states/Boot.js"></script>
     <script type="text/javascript" src="src/states/Preloader.js"></script>
     <script type="text/javascript" src="src/states/MainMenu.js"></script>
@@ -36,7 +38,7 @@
             pixelheight: 0
         }
     }
-
+ 
 	game.state.add('Boot', DropSomething.Boot);
 	game.state.add('Preloader', DropSomething.Preloader);
 	game.state.add('MainMenu', DropSomething.MainMenu);

@@ -1,23 +1,17 @@
-/* globals pixelwidth, pixelheight */
+/* globals pixelwidth, pixelheight, CPlayer, song */
 DropSomething.Preloader = function(game) {
 
     this.game = game;
     this.background = null;
     this.preloadBar = null;
 
-    this.ready = false;
+    this.loaded = false;
 
 };
 
 DropSomething.Preloader.prototype = {
 
     preload: function() {
-        //       this.background = this.add.sprite(0, 0, 'preloaderBackground');
-        // this.preloadBar = this.add.sprite(300, 400, 'preloaderBar');
-
-        // this.load.setPreloadSprite(this.preloadBar);
-
-        //	Here we load the rest of the assets our game needs.
         var spritesheet =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAAAQCAYAAADOFPsRAAABuklEQVRYR+2ZMVIDMQxFd2/CESgpOQLllikpKTkCJSUl5ZYcISUlR+AmMMqMwkeRbMlymM3gNJuZ3W979fxlKZmv7+++psRnWa4S6ml6vH2eUwP8c/FMAFshrOvnRFq6tnxIOwC2RO5H0w1gdBMw/AGwI0CvkxgWOjDiRH52ODAHj9S/HMgALTfJ+xrAmhOlZjgwB/EEILoDh5aBp3sWQMvJOPZIoTlwrFYBIhzPd48TrWeGA3MgTYAMjq6YFhlEzYF4JmrOGw6sg3vaPxxbPGujbw5grS/9eHkr9o2XriesCG652R1Ir++vh6sEubkUavWlfK56AJaKMI9eZh32Cq3Bo5dVekQvAbKWQBJEF0BMkzi5LHDOUcRoAHGeSABlkooAsGIQmV+O4Zkf3SfXr0HcXBshAcozNxJAPMc5GBF9CwBcf1ZvnZLoQhVg7Xg9ZyPfIwC4flmARQBqFfhf6K0Uzu9lAqyB01KS1TfWxrKqUAbYI4VlUihqMyk8mkFo3tLv08UzsBb0EsColneZXBBXkVoh4jlDSi+f0bcWUa0ALReqAFuCf6yOOv+ddOltQHb9yAI3o9UHfgNTe4UvlswUmgAAAABJRU5ErkJggg==';
 
@@ -182,8 +176,12 @@ DropSomething.Preloader.prototype = {
 
         this.game.load.image('font', font);
 
-        //this.load.audio('titleMusic', ['assets/audio/title.mp3']);
-        //this.load.bitmapFont('caslon', 'assets/img/desyrel-pink.png', 'asstes/img/desyrel-pink.xml');
+        this.player = new CPlayer();
+        this.player.init(song);
+
+        // Generate music...
+        var done = false;
+
     },
 
     create: function() {
@@ -192,25 +190,21 @@ DropSomething.Preloader.prototype = {
 
     update: function() {
 
-        //	You don't actually need to do this, but I find it gives a much smoother game experience.
-        //	Basically it will wait for our audio file to be decoded before proceeding to the MainMenu.
-        //	You can jump right into the menu if you want and still play the music, but you'll have a few
-        //	seconds of delay while the mp3 decodes - so if you need your music to be in-sync with your menu
-        //	it's best to wait for it to decode here first, then carry on.
+        this.ready = this.player.generate() >= 1;
 
-        //	If you don't have any music in your game then put the game.state.start line into the create function and delete
-        //	the update function completely.
+        if (this.ready === true && this.loaded === false) {
+            this.loaded = true;
+            var wave = this.player.createWave();
+            this.game.CS.audio = {};
+            this.game.CS.audio.song = document.createElement("audio");
+            this.game.CS.audio.song.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
+            this.game.CS.audio.song.play();
 
-        this.ready = true;
-        this.game.state.start('MainMenu');
-
-        /*if (this.cache.isSoundDecoded('titleMusic') && this.ready === false)
-		{
-			this.ready = true;
 			this.game.state.start('MainMenu');
-		}*/
+		}
 
     },
+
     render: function() {
         this.game.CS.settings.pixelcontext.drawImage(
             this.game.canvas,
