@@ -1,5 +1,4 @@
-
-DropSomething = {};
+window.DropSomething = {};
 
 DropSomething.Boot = function (game) {
     this.game = game;
