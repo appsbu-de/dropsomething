@@ -60,7 +60,7 @@ DropSomething.Game.prototype = {
         }
 
         this.game.physics.arcade.overlap(this.ball, this.extra, this.getExtraCallback, null, this);
-        this.game.physics.arcade.collide(this.platform1, this.ball);
+        this.game.physics.arcade.collide(this.platform1, this.ball, this.platformCallback, null, this);
         this.game.physics.arcade.collide(this.platform2, this.ball);
 
         this.levelVelocity = this.initialVelocity - this.platformCounter;
@@ -76,10 +76,12 @@ DropSomething.Game.prototype = {
     getExtraCallback: function(ball, extra) {
         extra.kill();
         this.game.CS.score += 25;
+        this.game.CS.audio.touch.play();
     },
 
 	quitGame: function (pointer) {
         //	Then let's go back to the main menu.
+        this.game.CS.audio.crash.play();
 		this.game.state.start('MainMenu');
 	},
 
