@@ -6,10 +6,10 @@ DropSomething.Boot = function (game) {
 
 DropSomething.Boot.prototype = {
     preload: function () {
+        var font =
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAAICAYAAABtcuNzAAACVElEQVRoQ+2ZMXJDMQhE4y5HSOn7nypljpAumV8oQxjBW8Dfhee7syUELMsKJbe363MhcCFwIfCiCNx8Xu8f95/vr8/t72tvd31nt848/NpYqj4q9lEc64wz1m18dP6Bg99D9pQ/rR8+Mx+WFxlHlNyi/Jbt7vzI54rb+iV74niVe57DU3uq/xQ/nz999xh38FX4Rxqb9WfE3X9CRg1uC0litWvQ47dOc+xInIHRLYDaYGefv8uNBCYTAAW/in23hhl/JvlZ3kYc9nsifkZYVeKb8qPK7akAPUPgbE7EtSj/jj79CdxyqjinPVmBu81BPgnAZxL0DIJX4ieBnK53a6gIXOdsz90I/zX5TOtztv0rCxz1cbZOArdbl5+oyvSWBbDWomeuXe+O+DSpqAB1nwCWmJ0npjoVZw28i52enxY3moCi+hH2ygUUxU5nqwK3XhDT+kb8pBdAhp2tkcqDCNOqACv4KfEpPZzllgk76U8kjCWBI/WlIIioyg1PZygTAOVRJYiPaWpPExadT/a0TucrGFenEN9k3p5udvVvcJmAk0CpwpPhR9w7i98ZvorA2bgphwk/umdHl7gscOSYbmhF/KYCpzYB5dJpcCJAZX0qQGRP6538qTGJHxN8fLyd+Cf+be5dASV8qH/U+BXx7eBH8VPPKdNbZ09J4KyD6hNMKdDaQ/+Jy9bplj180Jic3UCRvUIwNb+dj9U4mX+qj5J3FCPlRwKnxE8TVJTfIwTOTgD0BI0azebo60T4ET7UPxR/Vh8ryl2BpvgzbCrCRUOMx/0XnyncVMonngcAAAAASUVORK5CYII=';
 
-        //  Here we load the assets required for our preloader (in this case a background and a loading bar)
-        // this.load.image('preloaderBackground', 'assets/img/water_texture.jpg');
-        // this.load.image('preloaderBar', 'assets/img/plane-sheet.png');
+        this.game.load.image('font', font);
 
     },
 
@@ -20,6 +20,7 @@ DropSomething.Boot.prototype = {
         this.game.CS.settings.pixelwidth = pixelCanvas.width;
         this.game.CS.settings.pixelheight = pixelCanvas.height;
         this.game.CS.audio = {};
+        this.game.CS.highscore = 0;
 
         Phaser.Canvas.setSmoothingEnabled(this.game.CS.settings.pixelcontext, false);
 

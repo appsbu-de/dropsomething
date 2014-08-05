@@ -1,7 +1,8 @@
 /* globals pixelwidth, pixelheight */
 DropSomething.Game = function (game) {
     this.game = game;
-    this.currentTimer = null;
+    this.platformTimer = null;
+
 };
 
 DropSomething.Game.prototype = {
@@ -82,7 +83,16 @@ DropSomething.Game.prototype = {
 	quitGame: function (pointer) {
         //	Then let's go back to the main menu.
         this.game.CS.audio.crash.play();
-		this.game.state.start('MainMenu');
+        this.ball.kill();
+        this.game.time.events.remove(this.platformTimer);
+        this.setVelocities(0);
+        this.game.CS.highscore = Math.max(this.game.CS.highscore, this.game.CS.score);
+
+        var continueKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        continueKey.onUp.add(function(){
+            this.game.state.start('MainMenu');
+        }, this);
+
 	},
 
     handleInput: function() {
@@ -140,6 +150,12 @@ DropSomething.Game.prototype = {
         }
     },
 
+    setVelocities: function (velocity) {
+        this.platform1.setAll('body.velocity.y', velocity);
+        this.platform2.setAll('body.velocity.y', velocity);
+        this.extra.setAll('body.velocity.y', velocity);
+    },
+
     spawnPlatform: function () {
 
         this.platformCounter++;
@@ -164,20 +180,15 @@ DropSomething.Game.prototype = {
         while (platformLength--) {
             this.setPlatform(type, initX, platformLength, initY);
         }
-
-        this.platform1.setAll('body.velocity.y', this.levelVelocity);
-        this.platform2.setAll('body.velocity.y', this.levelVelocity);
-        this.extra.setAll('body.velocity.y', this.levelVelocity);
-
+        this.setVelocities(this.levelVelocity);
         this.platformTimer = this.game.time.events.add(
             Phaser.Timer.SECOND * this.game.rnd.integerInRange(1,maxTimeToSpawn), this.spawnPlatform, this
         );
+        this.platformTimer.autoDestroy = true;
     },
 
 
     render: function() {
-
-        this.game.debug.text( "Velocity: " + this.levelVelocity, 5, 132);
 
         this.game.CS.settings.pixelcontext.drawImage(
             this.game.canvas,

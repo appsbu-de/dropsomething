@@ -6,12 +6,14 @@ DropSomething.MainMenu = function (game) {
 
 DropSomething.MainMenu.prototype = {
 	create: function () {
-        //this.music = this.add.audio('titleMusic');
-		//this.music.play();
         this.game.stage.backgroundColor = '#E0F8D0';
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
         this.welcome = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
         this.welcome.text = "Drop Something!";
+
+        this.scorefont = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
+        this.scorefont.text = "Highscore: " + this.game.CS.highscore;
 
         this.pressSpace = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ:!?');
         this.pressSpace.text = "Press Space to play!";
@@ -21,6 +23,9 @@ DropSomething.MainMenu.prototype = {
 
         this.pressSpace = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 32, this.pressSpace);
         this.pressSpace.anchor.setTo(0.5, 0.5);
+
+        this.highscore = this.game.add.image(this.game.world.centerX, this.game.world.centerY - 32, this.scorefont);
+        this.highscore.anchor.setTo(0.5, 0.5);
 
         this.game.add.tween(this.titleText)
             .to(
@@ -33,12 +38,28 @@ DropSomething.MainMenu.prototype = {
                 true
             );
 
+        /*
+        this.tweet = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
+        this.tweet.onUp.add(function(){
+            this.tweetScore();
+        }, this);
+
+        var twitter = this.game.add.image(this.game.world.width - 18, this.game.world.height - 18, 'twitter');
+        */
 	},
+
+    tweetScore: function() {
+        var twtTitle  = "Wow! I've dropped a score of  " + this.game.CS.highscore + " points! How much do you get?";
+        var twtUrl    = location.href;
+        var twtLink = 'http://twitter.com/home?status='+encodeURIComponent(twtTitle + ' ' + twtUrl);
+        window.open(twtLink,'_blank');
+    },
 
 	update: function () {
         if (this.spaceKey.isDown) {
             this.startGame();
         }
+
 	},
 
 	startGame: function (pointer) {

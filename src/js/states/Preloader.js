@@ -14,10 +14,8 @@ DropSomething.Preloader.prototype = {
     preload: function() {
         var spritesheet =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAAAQCAYAAADOFPsRAAABuklEQVRYR+2ZMVIDMQxFd2/CESgpOQLllikpKTkCJSUl5ZYcISUlR+AmMMqMwkeRbMlymM3gNJuZ3W979fxlKZmv7+++psRnWa4S6ml6vH2eUwP8c/FMAFshrOvnRFq6tnxIOwC2RO5H0w1gdBMw/AGwI0CvkxgWOjDiRH52ODAHj9S/HMgALTfJ+xrAmhOlZjgwB/EEILoDh5aBp3sWQMvJOPZIoTlwrFYBIhzPd48TrWeGA3MgTYAMjq6YFhlEzYF4JmrOGw6sg3vaPxxbPGujbw5grS/9eHkr9o2XriesCG652R1Ir++vh6sEubkUavWlfK56AJaKMI9eZh32Cq3Bo5dVekQvAbKWQBJEF0BMkzi5LHDOUcRoAHGeSABlkooAsGIQmV+O4Zkf3SfXr0HcXBshAcozNxJAPMc5GBF9CwBcf1ZvnZLoQhVg7Xg9ZyPfIwC4flmARQBqFfhf6K0Uzu9lAqyB01KS1TfWxrKqUAbYI4VlUihqMyk8mkFo3tLv08UzsBb0EsColneZXBBXkVoh4jlDSi+f0bcWUa0ALReqAFuCf6yOOv+ddOltQHb9yAI3o9UHfgNTe4UvlswUmgAAAABJRU5ErkJggg==';
-
-        var font =
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAAICAYAAABtcuNzAAACVElEQVRoQ+2ZMXJDMQhE4y5HSOn7nypljpAumV8oQxjBW8Dfhee7syUELMsKJbe363MhcCFwIfCiCNx8Xu8f95/vr8/t72tvd31nt848/NpYqj4q9lEc64wz1m18dP6Bg99D9pQ/rR8+Mx+WFxlHlNyi/Jbt7vzI54rb+iV74niVe57DU3uq/xQ/nz999xh38FX4Rxqb9WfE3X9CRg1uC0litWvQ47dOc+xInIHRLYDaYGefv8uNBCYTAAW/in23hhl/JvlZ3kYc9nsifkZYVeKb8qPK7akAPUPgbE7EtSj/jj79CdxyqjinPVmBu81BPgnAZxL0DIJX4ieBnK53a6gIXOdsz90I/zX5TOtztv0rCxz1cbZOArdbl5+oyvSWBbDWomeuXe+O+DSpqAB1nwCWmJ0npjoVZw28i52enxY3moCi+hH2ygUUxU5nqwK3XhDT+kb8pBdAhp2tkcqDCNOqACv4KfEpPZzllgk76U8kjCWBI/WlIIioyg1PZygTAOVRJYiPaWpPExadT/a0TucrGFenEN9k3p5udvVvcJmAk0CpwpPhR9w7i98ZvorA2bgphwk/umdHl7gscOSYbmhF/KYCpzYB5dJpcCJAZX0qQGRP6538qTGJHxN8fLyd+Cf+be5dASV8qH/U+BXx7eBH8VPPKdNbZ09J4KyD6hNMKdDaQ/+Jy9bplj180Jic3UCRvUIwNb+dj9U4mX+qj5J3FCPlRwKnxE8TVJTfIwTOTgD0BI0azebo60T4ET7UPxR/Vh8ryl2BpvgzbCrCRUOMx/0XnyncVMonngcAAAAASUVORK5CYII=';
-
+        var twitter =
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgElEQVQ4T2NkgIKOAwX/YWxi6AqHCYwgdWDiwY8LJGmGWaDAYcDICLI5wiKBGEsx1Kw4sYABqwEaCgFgxTcebMBr8BAwAN396F4i6AWKDRjJgQgKPFhiQg5IrLFgkBHwf8OEBrKSckBBAyQzkWMISPOFGRsYwQbADCHFGSDNIPUA+x901a90FC0AAAAASUVORK5CYII=';
         var localAtlasData = {
             "frames": [{
                 "filename": "ground1",
@@ -174,7 +172,7 @@ DropSomething.Preloader.prototype = {
         this.game.load.atlas('sprites', spritesheet, null, localAtlasData, Phaser.Loader
             .TEXTURE_ATLAS_JSON_ARRAY);
 
-        this.game.load.image('font', font);
+        this.game.load.image('twitter', twitter);
 
         this.player = new CPlayer();
         this.player.init(song);
@@ -196,10 +194,15 @@ DropSomething.Preloader.prototype = {
         this.game.CS.audio.touch = new Audio(sinWave.dataURI);
         this.game.CS.audio.crash = new Audio(noiseWave.dataURI);
 
+        this.loading = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
+        this.loading.text = "loading!";
+        this.loader = this.game.add.image(this.game.world.centerX , this.game.world.centerY, this.loading);
+        this.loader.anchor.setTo(0.5, 0.5);
+
     },
 
     create: function() {
-        //this.preloadBar.cropEnabled = false;
+        this.game.stage.backgroundColor = '#E0F8D0';
     },
 
     update: function() {
