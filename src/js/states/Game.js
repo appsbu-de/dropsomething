@@ -2,19 +2,24 @@
 DropSomething.Game = function (game) {
     this.game = game;
     this.platformTimer = null;
-
 };
 
 DropSomething.Game.prototype = {
 
 	create: function () {
+        this.game.stage.backgroundColor = '#E0F8D0';
+
+        this.dead = false;
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.initialVelocity = this.levelVelocity = -25;
         this.platformCounter = 0;
         this.game.CS.score = 0;
 
-        // Some settings
-        this.game.stage.backgroundColor = '#E0F8D0';
+        this.endModalBmp = this.game.add.bitmapData(160, 144);
+        this.endModalBmp.context.lineWidth = 2;
+        this.endModalBmp.context.fillStyle = 'rgba(136, 192, 112, 1)';
+
+        this.modalLayer = this.game.add.sprite(0, 0, this.endModalBmp);
 
         this.ball = this.add.sprite(this.game.world.width / 2, 32, 'sprites', 'ball');
 
@@ -38,9 +43,7 @@ DropSomething.Game.prototype = {
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-        this.scoreText = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
-        this.scoreText.text = "score " + this.game.CS.score;
-
+        this.scoreText = this.addTextElement("score " + this.game.CS.score);
         this.scoreValue = this.game.add.image(2, 4, this.scoreText);
 
         this.setInitialPlatforms();
@@ -65,13 +68,11 @@ DropSomething.Game.prototype = {
         this.game.physics.arcade.collide(this.platform2, this.ball);
 
         this.levelVelocity = this.initialVelocity - this.platformCounter;
-
         this.scoreText.text = "score " + this.game.CS.score;
-
     },
 
     checkAlive: function() {
-        return this.ball.y > - 24 && this.ball.y <  this.game.world.height + 24;
+        return this.ball.y > - 24 && this.ball.y < this.game.world.height + 24;
     },
 
     getExtraCallback: function(ball, extra) {
@@ -80,20 +81,62 @@ DropSomething.Game.prototype = {
         this.game.CS.audio.touch.play();
     },
 
-	quitGame: function (pointer) {
-        //	Then let's go back to the main menu.
-        this.game.CS.audio.crash.play();
-        this.ball.kill();
-        this.game.time.events.remove(this.platformTimer);
-        this.setVelocities(0);
-        this.game.CS.highscore = Math.max(this.game.CS.highscore, this.game.CS.score);
+	quitGame: function () {
 
-        var continueKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        continueKey.onUp.add(function(){
-            this.game.state.start('MainMenu');
-        }, this);
+        var newHighscore = (this.game.CS.score >= this.game.CS.highscore);
 
+        if (!this.dead) {
+            this.ball.kill();
+            this.game.CS.audio.crash.play();
+            this.game.time.events.remove(this.platformTimer);
+            this.setVelocities(0);
+            this.game.CS.highscore = Math.max(this.game.CS.highscore, this.game.CS.score);
+            this.showEndModal(newHighscore);
+            var continueKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            continueKey.onUp.add(function(){
+                this.game.state.start('MainMenu');
+            }, this);
+
+
+            this.dead = true;
+        }
 	},
+
+    addTextElement: function (endTextValue) {
+        var newText = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ:!?');
+        newText.text = endTextValue;
+        return newText;
+    },
+
+    showEndModal: function(isHighscore) {
+
+        var endText = '';
+
+        if (isHighscore) {
+            endText += 'New Highscore!';
+        }
+        else {
+            endText += 'No Highscore!';
+        }
+
+        this.modalLayer.bringToTop();
+
+        this.endModalBmp.context.fillRect(16, 16, 128, 112);
+        this.endModalBmp.dirty = true;
+
+        this.endText = this.addTextElement(endText);
+        this.endTextCtn = this.addTextElement('Press spacebar!');
+
+        this.endTextImg = this.game.add.image(this.game.world.centerX ,-16, this.endText);
+        this.endTextCtnImg = this.game.add.image(this.game.world.centerX , this.game.world.centerY + 32, this.endTextCtn);
+        this.endTextImg.anchor.setTo(0.5, 0.5);
+        this.endTextCtnImg.anchor.setTo(0.5, 0.5);
+
+        var bounce = this.game.add.tween(this.endTextImg);
+
+        bounce.to({ y: this.game.world.centerY }, 2000, Phaser.Easing.Bounce.Out);
+        bounce.start();
+    },
 
     handleInput: function() {
         if (this.cursors.left.isDown) {

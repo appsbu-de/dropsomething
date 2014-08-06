@@ -9,14 +9,9 @@ DropSomething.MainMenu.prototype = {
         this.game.stage.backgroundColor = '#E0F8D0';
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-        this.welcome = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
-        this.welcome.text = "Drop Something!";
-
-        this.scorefont = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWYXZ:!?');
-        this.scorefont.text = "Highscore: " + this.game.CS.highscore;
-
-        this.pressSpace = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ:!?');
-        this.pressSpace.text = "Press Space to play!";
+        this.welcome = this.addTextElement("Drop Something!");
+        this.scorefont = this.addTextElement("Highscore: " + this.game.CS.highscore);
+        this.pressSpace = this.addTextElement("Press Space to play!");
 
         this.titleText = this.game.add.image(this.game.world.centerX - 16, this.game.world.centerY, this.welcome);
         this.titleText.anchor.setTo(0.5, 0.5);
@@ -53,6 +48,12 @@ DropSomething.MainMenu.prototype = {
         var twtUrl    = location.href;
         var twtLink = 'http://twitter.com/home?status='+encodeURIComponent(twtTitle + ' ' + twtUrl);
         window.open(twtLink,'_blank');
+    },
+
+    addTextElement: function (endTextValue) {
+        var newText = this.game.add.retroFont('font', 8, 8, '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ:!?');
+        newText.text = endTextValue;
+        return newText;
     },
 
 	update: function () {
