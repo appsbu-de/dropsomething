@@ -1,12 +1,18 @@
 /* globals pixelwidth, pixelheight */
 DropSomething.MainMenu = function (game) {
 	this.game = game;
-	this.music = null;
 };
 
 DropSomething.MainMenu.prototype = {
 	create: function () {
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
         this.game.stage.backgroundColor = '#E0F8D0';
+
+        this.platform = this.game.add.group();
+        this.platform.createMultiple(5, 'sprites', 'ground1');
+        this.game.physics.enable(this.platform);
+
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
         this.welcome = this.addTextElement("Drop Something!");
@@ -41,7 +47,20 @@ DropSomething.MainMenu.prototype = {
 
         var twitter = this.game.add.image(this.game.world.width - 18, this.game.world.height - 18, 'twitter');
         */
+
+        this.game.time.events.loop(Phaser.Timer.SECOND, this.platformGenerator, this);
 	},
+
+    platformGenerator: function() {
+        var myPlatform = this.platform.getFirstDead();
+        if (myPlatform !== null) {
+            myPlatform.reset(this.game.rnd.integerInRange(16, 160-16), 160);
+
+            myPlatform.outOfBoundsKill = true;
+            myPlatform.checkWorldBounds = true;
+            myPlatform.body.velocity.y = -75;
+        }
+    },
 
     tweetScore: function() {
         var twtTitle  = "Wow! I've dropped a score of  " + this.game.CS.highscore + " points! How much do you get?";
@@ -60,11 +79,10 @@ DropSomething.MainMenu.prototype = {
         if (this.spaceKey.isDown) {
             this.startGame();
         }
-
 	},
 
 	startGame: function (pointer) {
-		//this.music.stop();
+
 		this.game.state.start('Game');
 	},
 
