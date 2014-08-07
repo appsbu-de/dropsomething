@@ -214,6 +214,7 @@ DropSomething.Preloader.prototype = {
             var wave = this.player.createWave();
             this.game.CS.audio.song = document.createElement("audio");
             this.game.CS.audio.song.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
+            this.game.CS.audio.song.loop = true;
             this.game.CS.audio.song.play();
 
 			this.game.state.start('MainMenu');
