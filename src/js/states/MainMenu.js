@@ -14,19 +14,24 @@ DropSomething.MainMenu.prototype = {
         this.game.physics.enable(this.platform);
 
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.helpKey = this.game.input.keyboard.addKey(Phaser.Keyboard.H);
 
         this.welcome = this.addTextElement("Drop Something!");
         this.scorefont = this.addTextElement("Highscore: " + this.game.CS.highscore);
         this.pressSpace = this.addTextElement("Press Space to play!");
+		this.help = this.addTextElement("Press H for help");
 
         this.titleText = this.game.add.image(this.game.world.centerX - 16, this.game.world.centerY, this.welcome);
         this.titleText.anchor.setTo(0.5, 0.5);
 
-        this.pressSpace = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 32, this.pressSpace);
+        this.pressSpace = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 16, this.pressSpace);
         this.pressSpace.anchor.setTo(0.5, 0.5);
 
         this.highscore = this.game.add.image(this.game.world.centerX, this.game.world.centerY - 32, this.scorefont);
         this.highscore.anchor.setTo(0.5, 0.5);
+
+        this.helpHint = this.game.add.image(this.game.world.centerX, this.game.world.centerY + 32, this.help);
+        this.helpHint.anchor.setTo(0.5, 0.5);
 
         this.game.add.tween(this.titleText)
             .to(
@@ -79,12 +84,30 @@ DropSomething.MainMenu.prototype = {
         if (this.spaceKey.isDown) {
             this.startGame();
         }
+
+		if (this.helpKey.isDown) {
+			this.showHelp();
+		}
 	},
 
-	startGame: function (pointer) {
+	showHelp: function() {
+        this.cleanUp();
+        this.game.state.start('Help');
+	},
 
+	startGame: function () {
+
+        this.cleanUp();
 		this.game.state.start('Game');
 	},
+
+    cleanUp: function() {
+        this.titleText.destroy();
+        this.helpHint.destroy();
+        this.highscore.destroy();
+        this.pressSpace.destroy();
+        this.platform.destroy();
+    },
 
     render: function() {
         this.game.CS.settings.pixelcontext.drawImage(

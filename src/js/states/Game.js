@@ -64,7 +64,7 @@ DropSomething.Game.prototype = {
         }
 
         this.game.physics.arcade.overlap(this.ball, this.extra, this.getExtraCallback, null, this);
-        this.game.physics.arcade.collide(this.platform1, this.ball, this.platformCallback, null, this);
+        this.game.physics.arcade.collide(this.platform1, this.ball);
         this.game.physics.arcade.collide(this.platform2, this.ball);
 
         this.levelVelocity = this.initialVelocity - this.platformCounter;
@@ -93,7 +93,14 @@ DropSomething.Game.prototype = {
             this.game.CS.highscore = Math.max(this.game.CS.highscore, this.game.CS.score);
             this.showEndModal(newHighscore);
             var continueKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-            continueKey.onUp.add(function(){
+            continueKey.onUp.add(function() {
+                this.ball.destroy();
+                this.platform1.destroy();
+                this.platform2.destroy();
+                this.extra.destroy();
+                this.modalLayer.destroy();
+                this.endTextImg.destroy();
+
                 this.game.state.start('MainMenu');
             }, this);
 

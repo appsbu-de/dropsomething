@@ -217,6 +217,7 @@ DropSomething.Preloader.prototype = {
             this.game.CS.audio.song.loop = true;
             this.game.CS.audio.song.play();
 
+            this.loader.destroy();
 			this.game.state.start('MainMenu');
 		}
 
