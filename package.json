@@ -1,10 +1,10 @@
 {
-    "name": "project-name",
-    "title": "project description",
-    "url": "http://site.com",
-    "author": "Author",
+    "name": "DropSomething",
+    "title": "#GBJAM 3 entry. Inverse Doodle Jump.",
+    "url": "http://appsbu.de",
+    "author": "Carsten Sandtner",
     "copyright": "2014",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "license": "MIT",
     "repository": {
         "type": "git",

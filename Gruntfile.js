@@ -80,7 +80,13 @@ module.exports = function (grunt) {
             },
             phaser: {
                 src: '<%= project.phaser %>',
-                dest: '<%= project.game %>/phaser.js'
+                dest: '<%= project.game %>/vendor/phaser.js'
+            },
+            build: {
+                expand: true,
+                cwd: 'src/js/',
+                src: ['player-small.js', 'riffwave.js', 'song.js'],
+                dest: 'game/vendor/'
             }
         },
 
@@ -103,10 +109,12 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
-                    sourceMap: '<%= project.game %>/game.map'
+                    sourceMap: 'game.map'
                 },
                 files: {
-                    '<%= project.game %>/game.js': ['<%= project.js %>']
+                    '<%= project.game %>/game.js': [
+                        '<%= project.src %>/js/states/*.js'
+                    ]
                 }
             }
         },
@@ -169,6 +177,7 @@ module.exports = function (grunt) {
         'copy:public',
         'targethtml:dist',
         'copy:assets',
+        'copy:build',
         'copy:phaser'
     ]);
 

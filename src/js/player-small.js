@@ -332,4 +332,3 @@ var CPlayer = function() {
         return d;
     };
 };
-
